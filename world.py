@@ -12,12 +12,17 @@ class Agent:
         self.hedonist_table = _hedonist_table
         self._action = 0
         self.anticipated_outcome = 0
+        self.memoire = []
 
     def action(self, outcome):
         """ Computing the next action to enact """
-        # TODO: Implement the agent's decision mechanism
+        self.memoire.append([self.anticipated_outcome, outcome])
         self._action = 0
-        # TODO: Implement the agent's anticipation mechanism
+        if outcome == 1:
+            self.anticipated_outcome = 1
+        else:
+            self.anticipated_outcome = 0
+
         self.anticipated_outcome = 0
         return self._action
 
@@ -32,6 +37,7 @@ class Agent:
         # The value of the enacted interaction
         hedonist_satisfaction = self.hedonist_table[self._action][new_outcome]
         return anticipation_satisfaction, hedonist_satisfaction
+
 
 
 class Environment1:
