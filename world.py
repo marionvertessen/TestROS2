@@ -12,19 +12,53 @@ class Agent:
         self.hedonist_table = _hedonist_table
         self._action = 0
         self.anticipated_outcome = 0
-        self.memoire = []
+        self.memoire = [] #De la forme [action, anticipation]
+        self.cycle_iteration = 0
 
     def action(self, outcome):
-        """ Computing the next action to enact """
-        self.memoire.append([self.anticipated_outcome, outcome])
-        self._action = 0
-        if outcome == 1:
-            self.anticipated_outcome = 1
+        """Interprete le resultat"""
+        if len(self.memoire) == 0:
+            memoire
+         if self._action is not None:
+            print("Action: " + str(self._action) +
+                  ", Anticipation: " + str(self.anticipated_outcome) +
+                  ", Outcome: " + str(outcome) +
+                  ", Satisfaction: (anticipation: " + str(self.anticipated_outcome == outcome) +
+                  ", valence: " + str(self.hedonist_table[self._action][outcome]) + ")")
+        if self.cycle_iteration < 4:
+            self._action = outcome
+            self.cycle_iteration = self.cycle_iteration + 1
         else:
-            self.anticipated_outcome = 0
+            if outcome == 0:
+                self._action = 1
+            else:
+                self._action = 0
+            self.cycle_iteration = 0
 
-        self.anticipated_outcome = 0
+        """On veut que l'anticipation soit relier à l'action
+        Si le robot fait l'action 1 alors il anticipe 1
+        Si le robot fait l'action 0 alors il anticipe 0
+        On part du principe qu'il commence par 0 
+        S'il ne connait pas l'action, il teste la caleur de l'outcome précédent"""
+
+
+        #Si la memoire est vide on propose 0
+        if len(self.memoire) == 0:
+            self.anticipated_outcome = 0
+        else :
+            present = None #On considere que l'action n'est pas presente dans la memoire
+            for i in range(len(self.memoire)): #On parcours la memoire
+                # Si l'action est presente dans la memoire, on enregistre la valeur de l'anticipation
+                if self.memoire[i][0] == self._action:
+                    present = self.memoire[i][1]
+            if present != None : #Si l'action est présente
+                self.anticipated_outcome = present
+            else :
+                self.anticipated_outcome = 0
+
+
         return self._action
+
 
     def anticipation(self):
         """ Returning the anticipated outcome that was computed when choosing the action """
