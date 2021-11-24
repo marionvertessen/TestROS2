@@ -120,7 +120,7 @@ class Agent3:
             if self.memoire[i][0] == self._action and self.memoire[i][1] == outcome:
                 estdeja = True
         if estdeja == False and self._action is not None:
-            self.memoire.append([self._action, outcome, hedonist_table[self._action][outcome], 1])
+            self.memoire.append([self._action, outcome])
 
         # print(self.memoire)
         if self._action is not None:
