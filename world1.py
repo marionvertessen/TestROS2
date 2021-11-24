@@ -166,6 +166,62 @@ class Agent3:
         return self._action
 
 
+class Agent4:
+    def __init__(self, _hedonist_table):
+        """ Creating our agent """
+        self.hedonist_table = _hedonist_table
+        self._action = None
+        self.anticipated_outcome = None
+        self.memoire = []  # De la forme [action, anticipation]
+        self.cycle_iteration = 0
+
+    def action(self, outcome):
+        """ tracing the previous cycle """
+        estdeja = False
+        for i in range(len(self.memoire)):
+            if self.memoire[i][0] == self._action and self.memoire[i][1] == outcome:
+                estdeja = True
+        if estdeja == False and self._action is not None:
+            self.memoire.append([self._action, outcome])
+        # print(self.memoire)
+        if self._action is not None:
+            print("Action: " + str(self._action) +
+                  ", Anticipation: " + str(self.anticipated_outcome) +
+                  ", Outcome: " + str(outcome) +
+                  ", Satisfaction: (anticipation: " + str(self.anticipated_outcome == outcome) +
+                  ", valence: " + str(self.hedonist_table[self._action][outcome]) + ")")
+
+        """ Computing the next action to enact """
+        if self._action is not None:
+            if self.cycle_iteration < 3 and self.hedonist_table[self._action][outcome] == 1:
+                self.cycle_iteration = self.cycle_iteration + 1
+                #print(self.cycle_iteration)
+            elif self.cycle_iteration < 3 and self.hedonist_table[self._action][outcome] == -1:
+                if outcome == 0:
+                    self._action = 1
+                else:
+                    self._action = 0
+                self.cycle_iteration = 0
+            else:
+                if self._action == 0:
+                    self._action = 1
+                else:
+                    self._action = 0
+                self.cycle_iteration = 0
+        else :
+            self._action = 0
+
+        present = None  # On considere que l'action n'est pas presente dans la memoire
+        for i in range(len(self.memoire)):  # On parcours la memoire
+            # Si l'action est presente dans la memoire, on enregistre la valeur de l'anticipation
+            if self.memoire[i][0] == self._action:
+                present = self.memoire[i][1]
+        if present != None:  # Si l'action est présente
+            self.anticipated_outcome = present
+        else:
+            self.anticipated_outcome = 0
+        return self._action
+
 
 class Environment1:
     """ In Environment 1, action 0 yields outcome 0, action 1 yields outcome 1 """
