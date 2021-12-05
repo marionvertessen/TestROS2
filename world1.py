@@ -190,6 +190,7 @@ class Agent4:
             self.last_interaction = Interaction.create_or_retrieve(self._action, outcome,
                                                                    self.hedonist_table[self._action][outcome])
         estdeja = False
+        # print("taille mémoire : ", len(self.memoire))
         for i in range(len(self.memoire)):
             #print(self.memoire[i][1])
             #print(self.last_interaction)
@@ -209,21 +210,52 @@ class Agent4:
 
         """ Computing the next action to enact """
         if self._action is not None:
-            if self.cycle_iteration < 3 and self.hedonist_table[self._action][outcome] == 1:
-                self.cycle_iteration = self.cycle_iteration + 1
-                # print(self.cycle_iteration)
-            elif self.cycle_iteration < 3 and self.hedonist_table[self._action][outcome] == -1:
-                if outcome == 0:
-                    self._action = 1
-                else:
-                    self._action = 0
-                self.cycle_iteration = 0
+            last = self.last_interaction
+            list_actions = []
+            list_bad_actions = []
+            for interactions in self.memoire:
+                if (interactions[0] == last):
+                    if (interactions[1].valence == 1):
+                        list_actions.append(interactions)
+                    else :
+                        list_bad_actions.append(interactions[1].action)
+
+            if len(list_actions) != 0:
+                print("bonne action")
+                self._action = list_actions[0][1].action
+                self.anticipated_outcome = list_actions[0][1].outcome
+
+            elif len(list_bad_actions) != 0:
+                print("mauvaise action à éviter")
+                for action in list_bad_actions:
+                    if action == 0:
+                        self._action = 1
+                    else:
+                        self._action = 0
+
             else:
+                print("action aléatoire")
                 if self._action == 0:
                     self._action = 1
                 else:
                     self._action = 0
-                self.cycle_iteration = 0
+                self.anticipated_outcome = None
+
+            # if self.cycle_iteration < 3 and self.hedonist_table[self._action][outcome] == 1:
+            #     self.cycle_iteration = self.cycle_iteration + 1
+            #     # print(self.cycle_iteration)
+            # elif self.cycle_iteration < 3 and self.hedonist_table[self._action][outcome] == -1:
+            #     if outcome == 0:
+            #         self._action = 1
+            #     else:
+            #         self._action = 0
+            #     self.cycle_iteration = 0
+            # else:
+            #     if self._action == 0:
+            #         self._action = 1
+            #     else:
+            #         self._action = 0
+            #     self.cycle_iteration = 0
         else:
             self._action = 0
 
