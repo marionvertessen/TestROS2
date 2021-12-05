@@ -176,7 +176,7 @@ class Agent4:
         self.hedonist_table = _hedonist_table
         self._action = None
         self.anticipated_outcome = None
-        self.memoire = []  # De la forme [action, anticipation]
+        self.memoire = []  # Interaction(t-1) : previous ; Interaction(t) : last
         self.cycle_iteration = 0
         self.previous_interaction = None
         self.last_interaction = None
@@ -193,10 +193,11 @@ class Agent4:
         for i in range(len(self.memoire)):
             #print(self.memoire[i][1])
             #print(self.last_interaction)
-            if self.memoire[i][0] == self.previous_interaction and self.memoire[i][1] == self.last_interaction:
+            if self.memoire[i][0] == self.previous_interaction and self.memoire[i][1] == self.last_interaction :
                 estdeja = True
+                #print(estdeja)
 
-        if estdeja == False and self._action is not None:
+        if (estdeja == False) and (self._action is not None) and (self.previous_interaction is not None):
             self.memoire.append([self.previous_interaction, self.last_interaction])
 
         if self._action is not None:
@@ -226,7 +227,7 @@ class Agent4:
         else:
             self._action = 0
 
-        present = None  # On considere que l'action n'est pas presente dans la memoire
+        """present = None  # On considere que l'action n'est pas presente dans la memoire
         for i in range(len(self.memoire)):  # On parcours la memoire
             # Si l'action est presente dans la memoire, on enregistre la valeur de l'anticipation
             if self._action == self.last_interaction.action and self.previous_interaction == self.memoire[i][0]:
@@ -238,7 +239,7 @@ class Agent4:
             self.anticipated_outcome = present.outcome
             #print(present.outcome)
         else:
-            self.anticipated_outcome = None
+            self.anticipated_outcome = None"""
         return self._action
 
 
@@ -279,8 +280,9 @@ class Environment3:
 
 
 # TODO Define the hedonist values of interactions (action, outcome)
-hedonist_table = [[-1, 1], [1, -1]]
-#hedonist_table = [[1, -1], [1, -1]]
+#hedonist_table = [[-1, 1], [1, -1]]
+#hedonist_table = [[1, 1], [1, 1]]
+hedonist_table = [[-1,1], [-1,1]]
 #hedonist_table = [[1, -1, -1], [-1, 1, -1], [-1, -1, 1]]
 # TODO Choose an agent
 # a = Agent(hedonist_table)
@@ -289,8 +291,8 @@ hedonist_table = [[-1, 1], [1, -1]]
 a = Agent4(hedonist_table)
 # TODO Choose an environment
 #e = Environment1()
-e = Environment2()
-# e = Environment3()
+#e = Environment2()
+e = Environment3()
 # e = TurtleSimEnacter()
 #e = TurtlePyEnacter()
 
