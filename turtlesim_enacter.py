@@ -1,5 +1,5 @@
-#!/usr/bin/env python
 import turtle
+
 
 # Olivier Georgeon, 2021.
 # This code is used to teach Developmental AI.
@@ -7,40 +7,22 @@ import turtle
 # Inspired by Turtle Python tutorial:
 #   * https://www.javatpoint.com/python-turtle-programming
 
-SCREEN_WIDTH = 400
-SCREEN_HEIGHT = 300
-
 
 class TurtlePyEnacter:
 
     def __init__(self):
         """ Creating the Turtle window """
-        turtle.bgcolor("gray")
         self.screen = turtle.getscreen()
-        self.screen.setup(SCREEN_WIDTH + 60, SCREEN_HEIGHT + 60)
-
-        pen = turtle.Turtle("classic")
-        pen.speed(0)
-        pen.pencolor("white")
-        pen.hideturtle()
-        pen.setpos(-SCREEN_WIDTH/2, -SCREEN_HEIGHT/2)
-        pen.fillcolor("white")
-        pen.begin_fill()
-        for i in range(2):
-            pen.fd(SCREEN_WIDTH)
-            pen.rt(-90)
-            pen.fd(SCREEN_HEIGHT)
-            pen.rt(-90)
-        pen.end_fill()
-
+        self.screen.setup(400, 400)
         self.turtle = turtle.Turtle("turtle")
         self.turtle.color("green")
         self.turtle.speed(1)
 
     def outcome(self, action):
         """ Enacting an action and returning the outcome """
+        self.turtle.color("green")
+        _outcome = 0
         for i in range(10):
-            _outcome = 0
             if action == 0:
                 # move forward
                 self.turtle.speed(1)
@@ -58,22 +40,21 @@ class TurtlePyEnacter:
 
             # Bump on screen edge and return outcome 1
             (screen_x, screen_y) = self.screen.screensize()
-            if self.turtle.xcor() < -SCREEN_WIDTH/2:
-                self.turtle.goto(-SCREEN_WIDTH/2, self.turtle.ycor())
+            if self.turtle.xcor() < -screen_x/2:
+                self.turtle.goto(-screen_x/2, self.turtle.ycor())
                 _outcome = 1
-            if self.turtle.xcor() > SCREEN_WIDTH/2:
-                self.turtle.goto(SCREEN_WIDTH/2, self.turtle.ycor())
+                self.turtle.color("red")
+            if self.turtle.xcor() > screen_x/2:
+                self.turtle.goto(screen_x/2, self.turtle.ycor())
                 _outcome = 1
-            if self.turtle.ycor() < -SCREEN_HEIGHT/2:
-                self.turtle.goto(self.turtle.xcor(), -SCREEN_HEIGHT/2)
+                self.turtle.color("red")
+            if self.turtle.ycor() < -screen_y/2:
+                self.turtle.goto(self.turtle.xcor(), -screen_y/2)
                 _outcome = 1
-            if self.turtle.ycor() > SCREEN_HEIGHT/2:
-                self.turtle.goto(self.turtle.xcor(), SCREEN_HEIGHT/2)
+                self.turtle.color("red")
+            if self.turtle.ycor() > screen_y/2:
+                self.turtle.goto(self.turtle.xcor(), screen_y/2)
                 _outcome = 1
-
-            if _outcome == 0:
-                self.turtle.color("green")
-            else:
                 self.turtle.color("red")
 
         return _outcome
@@ -105,9 +86,9 @@ if __name__ == '__main__':
             print(x.outcome(2))
             interaction_step = 0
 
-    x.screen.onkey(k1, "Up")  # Up arrow key: go forward
-    x.screen.onkey(k2, "Left")  # Left arrow key: turn left
-    x.screen.onkey(k3, "Right")  # Right arrow key: turn right
+    x.screen.onkey(k1, "Up")  # the up arrow key
+    x.screen.onkey(k2, "Left")  # the left arrow key
+    x.screen.onkey(k3, "Right")  # you get it!
 
     x.screen.listen()
     x.screen.mainloop()

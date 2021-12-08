@@ -29,11 +29,10 @@ class Agent:
 
         """ Computing the next action to enact """
         if self.cycle_iteration < 3:
-            self._action = outcome
             self.cycle_iteration = self.cycle_iteration + 1
             # print(self.cycle_iteration)
         else:
-            if outcome == 0:
+            if self._action == 0:
                 self._action = 1
             else:
                 self._action = 0
@@ -82,7 +81,7 @@ class Agent2:
                 self.cycle_iteration = self.cycle_iteration + 1
                 # print(self.cycle_iteration)
             elif self.cycle_iteration < 3 and self.hedonist_table[self._action][outcome] == -1:
-                if outcome == 0:
+                if self._action == 0:
                     self._action = 1
                 else:
                     self._action = 0
@@ -116,7 +115,6 @@ class Agent3:
         self.anticipated_outcome = None
         self.memoire = []  # De la forme [action, anticipation]
         self.cycle_iteration = 0
-
     def action(self, outcome):
         """ tracing the previous cycle """
         estdeja = False
@@ -125,7 +123,6 @@ class Agent3:
                 estdeja = True
         if estdeja == False and self._action is not None:
             self.memoire.append([self._action, outcome])
-
         # print(self.memoire)
         if self._action is not None:
             print("Action: " + str(self._action) +
@@ -133,12 +130,11 @@ class Agent3:
                   ", Outcome: " + str(outcome) +
                   ", Satisfaction: (anticipation: " + str(self.anticipated_outcome == outcome) +
                   ", valence: " + str(self.hedonist_table[self._action][outcome]) + ")")
-
         """ Computing the next action to enact """
         if self._action is not None:
             if self.cycle_iteration < 3 and self.hedonist_table[self._action][outcome] == 1:
                 self.cycle_iteration = self.cycle_iteration + 1
-                # print(self.cycle_iteration)
+                #print(self.cycle_iteration)
             elif self.cycle_iteration < 3 and self.hedonist_table[self._action][outcome] == -1:
                 if self._action == 0:
                     self._action = 1
@@ -155,9 +151,8 @@ class Agent3:
                 else:
                     self._action = 0
                 self.cycle_iteration = 0
-        else:
+        else :
             self._action = 0
-
         present = None  # On considere que l'action n'est pas presente dans la memoire
         for i in range(len(self.memoire)):  # On parcours la memoire
             # Si l'action est presente dans la memoire, on enregistre la valeur de l'anticipation
@@ -168,7 +163,6 @@ class Agent3:
         else:
             self.anticipated_outcome = 0
         return self._action
-
 
 class Agent4:
     def __init__(self, _hedonist_table):
@@ -221,12 +215,12 @@ class Agent4:
                         list_bad_actions.append(interactions[1].action)
 
             if len(list_actions) != 0:
-                print("bonne action")
+                #print("bonne action")
                 self._action = list_actions[0][1].action
                 self.anticipated_outcome = list_actions[0][1].outcome
 
             elif len(list_bad_actions) != 0:
-                print("mauvaise action à éviter")
+                #print("mauvaise action à éviter")
                 for action in list_bad_actions:
                     if action == 0:
                         self._action = 1
@@ -234,7 +228,7 @@ class Agent4:
                         self._action = 0
 
             else:
-                print("action aléatoire")
+                #print("action aléatoire")
                 if self._action == 0:
                     self._action = 1
                 else:
@@ -313,24 +307,24 @@ class Environment3:
 
 # TODO Define the hedonist values of interactions (action, outcome)
 #hedonist_table = [[-1, 1], [1, -1]]
-#hedonist_table = [[1, 1], [1, 1]]
+#hedonist_table = [[1, -1], [1, -1]]
 hedonist_table = [[-1,1], [-1,1]]
 #hedonist_table = [[1, -1, -1], [-1, 1, -1], [-1, -1, 1]]
 # TODO Choose an agent
-# a = Agent(hedonist_table)
-# a = Agent2(hedonist_table)
-# a = Agent3(hedonist_table)
+#a = Agent(hedonist_table)
+#a = Agent2(hedonist_table)
+#a = Agent3(hedonist_table)
 a = Agent4(hedonist_table)
 # TODO Choose an environment
-#e = Environment1()
+# e = Environment1()
 #e = Environment2()
-e = Environment3()
+#e = Environment3()
 # e = TurtleSimEnacter()
-#e = TurtlePyEnacter()
+e = TurtlePyEnacter()
 
 if __name__ == '__main__':
     """ The main loop controlling the interaction of the agent with the environment """
     outcome = 0
-    for i in range(20):
+    for i in range(100):
         action = a.action(outcome)
         outcome = e.outcome(action)
